@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result | Fake News Detection AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 min-h-screen text-white font-inter">
+
+    <!-- Navigation -->
+    <nav class="glass-nav py-4 px-8 fixed w-full z-50 border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='/'">
+                <div class="bg-gradient-to-tr from-blue-500 to-purple-500 p-2 rounded-lg">
+                    <i class="fas fa-shield-alt text-2xl text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight">Fake News Detection <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">AI</span>
+                </h1>
+            </div>
+            <a href="/"
+                class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg backdrop-blur-md transition-all text-sm font-medium flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> New Analysis
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-12 px-4 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left Column: Main Result -->
+            <div class="lg:col-span-1 space-y-8">
+                <!-- Final Verdict Card -->
+                <div class="glass-card rounded-3xl p-8 relative overflow-hidden border border-white/10 flex flex-col items-center text-center shadow-2xl animate-fade-in-up"
+                    id="verdict-card">
+                    <!-- Dynamic glow background injected via JS -->
+                    <div id="verdict-glow" class="absolute inset-0 opacity-20 blur-3xl rounded-full"></div>
+
+                    <div class="relative z-10 w-full">
+                        <h3 class="text-gray-400 font-medium uppercase tracking-wider mb-6 text-sm">System Verdict</h3>
+
+                        <div id="verdict-icon-container"
+                            class="w-32 h-32 mx-auto rounded-full flex items-center justify-center mb-6 shadow-lg border-4">
+                            <i id="verdict-icon" class="fas fa-question text-5xl"></i>
+                        </div>
+
+                        <h2 id="prediction-text" class="text-5xl font-black mb-2 uppercase tracking-tight">--</h2>
+                        <div class="text-6xl font-light mb-6 opacity-90"><span id="confidence-score">--</span><span
+                                class="text-2xl ml-1">%</span></div>
+
+                        <div class="w-full bg-black/40 rounded-full h-4 mb-2 overflow-hidden border border-white/5">
+                            <div id="confidence-bar"
+                                class="h-full rounded-full transition-all duration-1000 ease-out w-0"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500 font-medium px-1">
+                            <span>Likely Fake (0%)</span>
+                            <span>Likely Real (100%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Details -->
+            <div class="lg:col-span-2 space-y-8 animate-fade-in-up" style="animation-delay: 0.1s;">
+
+                <!-- LLM Explanation -->
+                <div class="glass-card rounded-3xl p-8 border border-white/10">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i class="fas fa-robot text-blue-400"></i> Llama 3.2 Analysis
+                    </h3>
+                    <div class="bg-black/30 rounded-2xl p-6 border border-white/5 relative">
+                        <i class="fas fa-quote-left absolute top-4 left-4 text-4xl text-white/5"></i>
+                        <p id="explanation-text" class="text-gray-300 leading-relaxed relative z-10 text-lg">
+                            Loading analysis from language model...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Modality Breakdown -->
+                <div class="glass-card rounded-3xl p-8 border border-white/10">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i class="fas fa-chart-pie text-purple-400"></i> Modality Signals
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="modality-grid">
+                        <!-- Text -->
+                        <div class="bg-black/20 rounded-2xl p-5 border border-white/5">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-file-alt text-blue-400"></i>
+                                    <span class="font-medium text-gray-300">Semantics / Text</span>
+                                </div>
+                                <span id="score-text" class="font-bold">--%</span>
+                            </div>
+                            <div class="w-full bg-black/50 rounded-full h-2">
+                                <div id="bar-text"
+                                    class="bg-blue-400 h-2 rounded-full w-0 transition-all duration-1000"></div>
+                            </div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="bg-black/20 rounded-2xl p-5 border border-white/5">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-image text-purple-400"></i>
+                                    <span class="font-medium text-gray-300">Visual Forensics</span>
+                                </div>
+                                <span id="score-image" class="font-bold">--%</span>
+                            </div>
+                            <div class="w-full bg-black/50 rounded-full h-2">
+                                <div id="bar-image"
+                                    class="bg-purple-400 h-2 rounded-full w-0 transition-all duration-1000"></div>
+                            </div>
+                        </div>
+
+                        <!-- Video -->
+                        <div class="bg-black/20 rounded-2xl p-5 border border-white/5">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-video text-pink-400"></i>
+                                    <span class="font-medium text-gray-300">Temporal / Video</span>
+                                </div>
+                                <span id="score-video" class="font-bold">--%</span>
+                            </div>
+                            <div class="w-full bg-black/50 rounded-full h-2">
+                                <div id="bar-video"
+                                    class="bg-pink-400 h-2 rounded-full w-0 transition-all duration-1000"></div>
+                            </div>
+                        </div>
+
+                        <!-- Social -->
+                        <div class="bg-black/20 rounded-2xl p-5 border border-white/5">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-network-wired text-emerald-400"></i>
+                                    <span class="font-medium text-gray-300">Social Network</span>
+                                </div>
+                                <span id="score-social" class="font-bold">--%</span>
+                            </div>
+                            <div class="w-full bg-black/50 rounded-full h-2">
+                                <div id="bar-social"
+                                    class="bg-emerald-400 h-2 rounded-full w-0 transition-all duration-1000"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center text-gray-500 text-sm border-t border-white/5 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>&copy; 2026 Fake News Detection AI. All rights reserved.</p>
+            <p class="mt-2 font-medium text-gray-400">Developed by <span class="text-blue-400">Lakshmi Moksha
+                    Boya</span></p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+    <script>
+        // Load results on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const dataStr = localStorage.getItem('analysisResult');
+            if (!dataStr) {
+                window.location.href = '/';
+                return;
+            }
+
+            const data = JSON.parse(dataStr);
+            console.log(data);
+
+            // final score percentage
+            const finalPercent = Math.round(data.confidence * 100);
+
+            // Update Text
+            const predEl = document.getElementById('prediction-text');
+            predEl.innerText = data.prediction;
+
+            document.getElementById('confidence-score').innerText = finalPercent;
+
+            // Explanation formatting
+            let explanation = data.explanation || "No advanced explanation generated.";
+            // Strip the score line if present at the top
+            explanation = explanation.replace(/^(0\.\d+|1\.0)\n?/, '');
+            // Simple markdown parsing to HTML
+            explanation = explanation.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            explanation = explanation.replace(/\n/g, '<br>');
+            document.getElementById('explanation-text').innerHTML = explanation;
+
+            // Stylization based on verdict
+            const isFake = data.prediction.toLowerCase().includes('fake');
+
+            const vCard = document.getElementById('verdict-card');
+            const vGlow = document.getElementById('verdict-glow');
+            const vIconContainer = document.getElementById('verdict-icon-container');
+            const vIcon = document.getElementById('verdict-icon');
+            const cBar = document.getElementById('confidence-bar');
+
+            if (isFake) {
+                predEl.classList.add('text-red-500');
+                vGlow.classList.add('bg-red-500');
+                vIconContainer.classList.add('border-red-500/50', 'bg-red-500/10', 'text-red-500');
+                vIcon.className = 'fas fa-times-circle text-5xl text-red-500 shadow-red-500 shadow-xl rounded-full';
+                cBar.classList.add('bg-gradient-to-r', 'from-red-600', 'to-red-400');
+            } else {
+                predEl.classList.add('text-emerald-500');
+                vGlow.classList.add('bg-emerald-500');
+                vIconContainer.classList.add('border-emerald-500/50', 'bg-emerald-500/10', 'text-emerald-500');
+                vIcon.className = 'fas fa-check-circle text-5xl text-emerald-500 shadow-emerald-500 shadow-xl rounded-full';
+                cBar.classList.add('bg-gradient-to-r', 'from-emerald-600', 'to-emerald-400');
+            }
+
+            // Animate confidence bar
+            setTimeout(() => {
+                cBar.style.width = `${finalPercent}%`;
+            }, 300);
+
+            // Update individual modalities
+            const mods = ['text', 'image', 'video', 'social'];
+            mods.forEach(mod => {
+                const score = data.modality_scores[mod];
+                const pct = Math.round(score * 100);
+                document.getElementById(`score-${mod}`).innerText = `${pct}%`;
+
+                setTimeout(() => {
+                    document.getElementById(`bar-${mod}`).style.width = `${pct}%`;
+                }, 500);
+            });
+        });
+    </script>
+</body>
+
+</html>
